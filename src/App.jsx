@@ -8,7 +8,7 @@ function App() {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/products")
+    fetch("https://my-api-server-txbx.onrender.com/api/products")
       .then((response) => response.json())
       .then((data) => {
         setProducts(data); // Lưu data vào state để hiển thị

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion"; // Import motion
 
 function BookForm({ onSubmit, currentBook, cancelEdit }) {
-  // State lưu dữ liệu form
   const [formData, setFormData] = useState({
     title: "",
     author: "",
@@ -9,12 +9,11 @@ function BookForm({ onSubmit, currentBook, cancelEdit }) {
     published_year: ""
   });
 
-  // useEffect này chạy mỗi khi "currentBook" thay đổi (khi bấm nút Sửa)
   useEffect(() => {
     if (currentBook) {
-      setFormData(currentBook); // Điền thông tin sách cần sửa vào form
+      setFormData(currentBook);
     } else {
-      setFormData({ title: "", author: "", price: "", published_year: "" }); // Reset form nếu không sửa gì
+      setFormData({ title: "", author: "", price: "", published_year: "" });
     }
   }, [currentBook]);
 
@@ -29,50 +28,93 @@ function BookForm({ onSubmit, currentBook, cancelEdit }) {
       alert("Vui lòng nhập tên sách và giá!");
       return;
     }
-    // Gửi dữ liệu ra ngoài cho App.jsx xử lý
     onSubmit(formData);
-    // Reset form sau khi gửi (chỉ reset nếu đang ở chế độ thêm mới)
     if (!currentBook) {
-        setFormData({ title: "", author: "", price: "", published_year: "" });
+      setFormData({ title: "", author: "", price: "", published_year: "" });
     }
   };
 
+  // Cấu hình hiệu ứng cho input
+  const inputAnimation = {
+    focus: { scale: 1.02, borderColor: "#646cff", boxShadow: "0px 0px 8px rgba(100, 108, 255, 0.5)" },
+    rest: { scale: 1 }
+  };
+
   return (
-    <div className="card" style={{ marginBottom: "20px", border: "1px solid #ddd", padding: "15px", borderRadius: "8px" }}>
-      <h3>{currentBook ? "Cập nhật sách" : "Thêm Sách Mới"}</h3>
+    <motion.div 
+      className="card" 
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      style={{ marginBottom: "20px", border: "1px solid #ddd", padding: "15px", borderRadius: "12px", background: "#fff", boxShadow: "0 4px 6px rgba(0,0,0,0.1)" }}
+    >
+      <motion.h3 
+        key={currentBook ? "edit" : "add"} // Key thay đổi để kích hoạt animation
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+      >
+        {currentBook ? "✏️ Cập nhật sách" : "📚 Thêm Sách Mới"}
+      </motion.h3>
       
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-        <input
-          type="text" name="title" placeholder="Tên sách"
-          value={formData.title} onChange={handleInputChange} required
-        />
-        <input
-          type="text" name="author" placeholder="Tên tác giả"
-          value={formData.author} onChange={handleInputChange}
-        />
-        <input
-          type="number" name="price" placeholder="Giá tiền"
-          value={formData.price} onChange={handleInputChange} required
-        />
-        <input
-          type="number" name="published_year" placeholder="Năm xuất bản"
-          value={formData.published_year} onChange={handleInputChange}
-        />
+      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+        {["title", "author", "price", "published_year"].map((field) => (
+          <motion.input
+            key={field}
+            variants={inputAnimation}
+            whileFocus="focus"
+            initial="rest"
+            type={field === "price" || field === "published_year" ? "number" : "text"}
+            name={field}
+            placeholder={
+              field === "title" ? "Tên sách" : 
+              field === "author" ? "Tên tác giả" : 
+              field === "price" ? "Giá tiền" : "Năm xuất bản"
+            }
+            value={formData[field]} 
+            onChange={handleInputChange} 
+            required={field === "title" || field === "price"}
+            style={{ padding: "10px", borderRadius: "6px", border: "1px solid #ccc", outline: "none" }}
+          />
+        ))}
 
         <div style={{ display: "flex", gap: "10px" }}>
-          <button type="submit" style={{ backgroundColor: currentBook ? "#f39c12" : "#646cff", color: "white", flex: 1 }}>
+          <motion.button 
+            type="submit" 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            style={{ 
+              backgroundColor: currentBook ? "#f39c12" : "#646cff", 
+              color: "white", 
+              flex: 1, 
+              padding: "10px", 
+              borderRadius: "6px", 
+              border: "none", 
+              cursor: "pointer",
+              fontWeight: "bold"
+            }}
+          >
             {currentBook ? "Lưu thay đổi" : "Thêm sách"}
-          </button>
+          </motion.button>
           
-          {/* Nút hủy chỉ hiện khi đang sửa */}
-          {currentBook && (
-            <button type="button" onClick={cancelEdit} style={{ backgroundColor: "#7f8c8d", color: "white" }}>
-              Hủy
-            </button>
-          )}
+          <AnimatePresence>
+            {currentBook && (
+              <motion.button 
+                type="button" 
+                onClick={cancelEdit} 
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: "auto" }}
+                exit={{ opacity: 0, width: 0 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                style={{ backgroundColor: "#7f8c8d", color: "white", padding: "10px 20px", borderRadius: "6px", border: "none", cursor: "pointer" }}
+              >
+                Hủy
+              </motion.button>
+            )}
+          </AnimatePresence>
         </div>
       </form>
-    </div>
+    </motion.div>
   );
 }
 

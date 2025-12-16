@@ -5,12 +5,12 @@ import BookList from "./components/BookList";
 
 function App() {
   const [books, setBooks] = useState([]);
-  
+
   // State này dùng để biết đang sửa cuốn nào (null = đang thêm mới)
   const [editingBook, setEditingBook] = useState(null);
 
   // URL API (Thay đổi URL của bạn tại đây)
-  const API_URL = "https://my-api-server-txbx.onrender.com/api/books"; 
+  const API_URL = "https://my-api-server-txbx.onrender.com/api/books";
 
   // --- 1. LẤY DỮ LIỆU (GET) ---
   const fetchBooks = () => {
@@ -73,7 +73,7 @@ function App() {
   // --- 4. CÁC HÀM PHỤ TRỢ ---
   const startEditing = (book) => {
     setEditingBook(book); // Chuyển form sang chế độ sửa và điền dữ liệu
-    window.scrollTo({ top: 0, behavior: 'smooth' }); // Cuộn lên đầu trang để sửa
+    window.scrollTo({ top: 0, behavior: "smooth" }); // Cuộn lên đầu trang để sửa
   };
 
   const cancelEdit = () => {
@@ -82,23 +82,22 @@ function App() {
 
   return (
     <div style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}>
+      <h1>
+        <u>Phạm Đức Duy Cuối Kì </u>
+      </h1>
       <h1>Quản Lý Sách </h1>
 
       {/* Gọi Component Form */}
-      <BookForm 
-        onSubmit={handleFormSubmit} 
-        currentBook={editingBook} 
+      <BookForm
+        onSubmit={handleFormSubmit}
+        currentBook={editingBook}
         cancelEdit={cancelEdit}
       />
 
       <hr />
 
       {/* Gọi Component List */}
-      <BookList 
-        books={books} 
-        onEdit={startEditing} 
-        onDelete={handleDelete} 
-      />
+      <BookList books={books} onEdit={startEditing} onDelete={handleDelete} />
     </div>
   );
 }

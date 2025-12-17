@@ -155,7 +155,7 @@ function App() {
         {/* Phần tử con 1: Tiêu đề */}
         <motion.div variants={itemVariants} style={{ textAlign: "center", marginBottom: "30px" }}>
           <h1 style={{ color: "#2c3e50", margin: "0", fontSize: "1.8rem" }}>
-            <u>Phạm Đức Duy Cuối Kì</u>
+            <u>Phạm Đức Duy- THứ 4 ca 2 </u>
           </h1>
           <h2 style={{ color: "#34495e", marginTop: "10px", fontSize: "1.5rem" }}>Quản Lý Sách 📖</h2>
         </motion.div>
